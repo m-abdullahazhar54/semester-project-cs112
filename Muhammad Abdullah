@@ -1,0 +1,408 @@
+void main() {                                            // displays the main user interface screen of program .
+     system("cls");                                        //To clear the console screen
+
+      cout << " WELCOME TO MAIN MENU ";                  
+      cout << endl;
+
+      cout << "[1] . View Customer Accounts";              // displays Customer Accounts
+      cout << endl;
+
+      cout << "[2] . Customer Account Registration";       //Ask administrator to create account
+      cout << endl;
+
+      cout << "[3] . Edit Customer Account";               //Ask administrator to edit account
+      cout << endl;
+
+      cout << "[4] . Delete Customer Account";             //Ask administrator to delete account
+      cout << endl;
+
+      cout << "[5] . Search Customer Account";             //Ask administrator to search account
+      cout << endl;
+
+      cout << "[6] . Transaction";                         //Ask administrator to transact money to any account
+      cout << endl;
+
+      cout << "[7] . Log Out !!! ";                        //Ask administrator to log out
+      cout << endl;
+
+      cout << "[8] . About US ";                           //Details about our team
+      cout << endl;
+
+      cout << "Please Enter Your Choice [1-8] : ";
+      mainchoice();                                        //Calling mainchoice function
+   }
+
+
+
+
+   void mainchoice() {                                        // takes user choice in main  and goes to desired function .
+
+      int i;
+      cin >> i;
+      cout<<endl;
+      system("cls");                           //To clear the console screen
+
+      switch (i) {                             //Switch cases to select the options for administrator
+      case 1:
+         view();                               //To view account
+         break;
+      case 2:
+         add();                                //To add account    
+         break;
+      case 3:
+         edit();                              //To edit account
+         break;
+      case 4:
+         del();                               //To delete account
+         break;
+      case 5:
+         search();                            //To search account 
+         break;
+      case 6:
+         transaction();                      //To transact money to any other account
+         break;
+      case 7:
+         mainexit();                         //Exir from main menu
+         break;
+      case 8:
+         about();                            //To display our details
+         break;
+      default:
+         main();                             //Return to main menu
+      }
+   }
+
+
+
+
+
+
+ void search() {                               //module for searching account ( 2 types by number and name )
+
+ system("cls");
+      int search_choice;
+
+      cout << " SEARCH MENU: ";
+      cout << endl;
+
+      cout << "[1] . Search By Account ";             //Option to search account by account
+      cout << endl;
+
+      cout << "[2] . Search By Name ";                //Option to search account by name
+      cout << endl;
+
+      cout << "Enter Your Choice [1-2] : ";
+      cin>>search_choice;
+      system("cls");
+
+      if (search_choice== 1) {                       //if account found
+         search_acn();
+      }
+	   else if (search_choice== 2)                    //if account not found
+	   {                 
+         search_name();
+      } else
+         main();                                     //Return to main menu
+   }
+
+
+
+
+
+
+void gikipay::search_name()                          //module for search details through name.
+{
+
+
+   int i = 0, b, x, interestRate = 0.06;
+   char nam[30];
+
+   cout << " SEARCH CUSTOMER ACCOUNT ";             
+cout<<endl;
+
+   cout << "Enter Your Full Name To Search : ";      //Entre name to search
+   cin >> nam;
+   record recs;
+   ifstream con;                                     //to read input from a file.
+   con.open("record.bin", ios::in | ios::binary);    //ios::in:- file should be opened for input operations
+                                                     //ios::binary:-file should be open in binary mode
+
+   while (con.read(reinterpret_cast < char * > ( & recs), sizeof(recs))) // interprets the address of the object "recs" as a char*
+   {                                                                  //sizeof(recs)  specifies the number of bytes to be read from the file.
+      b = 0;
+      strupr(recs.name);                             //converts a string "Name of person" to uppercase    
+      strupr(nam);
+      if (strcmp(recs.name, nam) == 0) {             //Checks if both uppercase name  are equal
+
+
+/*
+The function strupr() is used to convert the characters in a string to uppercase.
+ In this code, strupr(recs.name) is converting all the characters in the string recs.name to uppercase.
+Similarly, strupr(nam) is converting all the characters in the string nam to uppercase.
+
+The function strcmp() is used to compare two strings and returns an integer value based on their lexicographical order.
+ If the strings are equal, it returns 0.
+In this code, strcmp(recs.name, nam) == 0 is checking if the string recs.name is equal to the string nam (after converting both to uppercase). 
+If they are equal, the condition evaluates to true and the code inside the if statement will be executed.
+*/
+
+
+         cout << "Account Number Matched";
+        cout<<endl;
+         cout << "Detail Information of " << recs.name;                //Display all the details
+cout<<endl;
+         cout << "[1] . Account Number : " << recs.account;
+cout<<endl;
+         cout << "[2] . Name           : " << recs.name;
+cout<<endl;
+         cout << "[3] . UserID         : ";
+         for (int r = 0; r < 10; r++) {
+            cout << (int) recs.UserID[r];
+         }
+cout<<endl;
+         cout << "[4] . Phone Number   : " << recs.phone;
+cout<<endl;
+         cout << "[5] . Address        : " << recs.address;
+cout<<endl;
+         cout << "[6] . E-mail         : " << recs.email;
+cout<<endl;
+         cout << "[7] . Citizenship No : " << recs.citizenship_no;
+cout<<endl;
+         cout << "[8] . Current Balance: " << recs.balance;
+cout<<endl;
+         cout << "[9] . Status         : ";                 //Display the status
+         if (recs.balance > 25) {
+            cout << "Active";
+         } 
+		 else {
+            cout << "Inactive";
+         }
+cout<<endl;
+         cout << "[10] . Acquired Interest: ";                         //Calculate the interest rate
+         double monthlyInterestRate = interestRate / 12;               
+         double monthlyInterest = recs.balance * monthlyInterestRate;
+         recs.balance += monthlyInterest;
+         cout << recs.balance << "$";
+         break;
+      } else
+         b = 1;
+   }
+   con.close();
+   if (b == 1) {
+
+   		system("cls");
+
+
+      cout << "Account Doesn't Exist. ";
+cout<<endl;
+   }
+  cout<<endl;
+   cout << "Press [ENTER] to return back to main menu. ";
+   char z = getch();                                                //used to read a single character from the keyboard
+   if (z == 13)
+      main();
+   else
+      search();
+}
+
+
+
+
+
+
+void gikipay::check_balance()                                      // module for checking account balance and displaying it
+                                                                   // part of transaction  
+ {                                   
+   record recs;
+   ifstream con;
+   int a;
+
+   cout << " BALANCE INQUIRY ";
+cout<<endl;
+   cout << "Enter Your Account Number : ";
+   cin>>a;
+   if (ca(a) == 1) {
+      con.open("record.bin", ios::in | ios::binary);
+      while (con.read(reinterpret_cast < char * > ( & recs), sizeof(recs)))        //to read input from a file.
+	   {                                                                           //ios::in:- file should be opened for input operations
+                                                                                   //ios::binary:-file should be open in binary mode
+
+		 if (recs.account == a) {                                                  //if account number match
+
+            cout << "Your Balance is : $" << recs.balance;
+            cout<<endl;
+         }
+      }
+      con.close();                                                                  //Close the file
+   }
+   if (ca(a) == 0)
+    {
+
+	system("cls");
+      cout << "Account Doesn't Exist.";
+      check_balance();                                                              //Runs the function check balance
+      cout<<endl;
+    }
+
+   cout << "Press any key to return back to main menu. ";
+   getch();
+   transaction();
+
+}
+
+
+
+
+
+// module for search details through account number.
+void gikipay::search_acn() {
+
+   record recs;
+   ifstream con;
+   int b = 0;
+
+   int a, x, interestRate = 0.06;
+
+   re:
+
+      cout << " SEARCH CUSTOMER ACCOUNT ";
+cout<<endl;
+   cout << "Enter Your Account Number To Search : ";
+   cin>>a;
+   if (ca(a) == 1) {
+      con.open("record.bin", ios::in | ios::binary);
+
+      while (con.read(reinterpret_cast < char * > ( & recs), sizeof(recs))) {
+         if (recs.account == a) {
+
+            cout << "Account Number Matched";
+            cout<<endl;
+
+            cout << "Detail Information of " << recs.name;                      //Display all the details
+            cout<<endl;
+
+
+            cout << "[1] . Account Number : " << recs.account;
+            cout<<endl;
+            cout << "[2] . Name           : " << recs.name;
+            cout<<endl;
+            cout << "[3] . UserID         : ";
+            for (int r = 0; r < 10; r++) {
+               cout << (int) recs.UserID[r];
+            }
+            cout<<endl;
+            cout << "[4] . Phone Number   : " << recs.phone;
+            cout<<endl;
+            cout << "[5] . Address        : " << recs.address;
+            cout<<endl;
+            cout << "[6] . E-mail         : " << recs.email;
+            cout<<endl;
+            cout << "[7] . Citizenship No : " << recs.citizenship_no;
+            cout<<endl;
+            cout << "[8] . Current Balance: " << recs.balance;
+            cout<<endl; 
+            cout << "[9] . Status         : ";
+            if (recs.balance > 25) {
+               cout << "Active";
+            } 
+			else {
+               cout << "Inactive";
+            }
+            cout<<endl;
+            cout << "[10] . Acquired Interest: ";                                   //Calculate the interest rate
+            double monthlyInterestRate = interestRate / 12;                      
+            double monthlyInterest = recs.balance * monthlyInterestRate;
+            recs.balance += monthlyInterest;
+            cout << recs.balance << "$";
+            break;
+         } 
+		 else
+            b = 1;
+      }
+      con.close();
+   }
+
+   if (ca(a) == 0) {                                                             //If account does not found
+    	system("cls");
+      cout << "Account Doesn't Exist. ";
+  cout<<endl;
+      goto re;
+   }
+  cout<<endl;
+  cout<<endl;
+  cout<<endl;
+   cout << "Press [ENTER] to return back to main menu. ";
+   char z = getch();
+   if (z == 13)
+      main();
+   else
+      search();	
+}
+
+
+//module for editing details.
+void gikipay::edit() {
+   record rec;
+   ifstream f1;
+   ofstream f2;
+   int a, c;
+
+
+      cout << " EDIT CUSTOMER ACCOUNT ";
+cout<<endl;
+   cout << "Enter Your Account Number To Edit : ";
+   cin>>a;
+
+     system("CLS");
+   if (ca(a) == 1) {
+      f1.open("record.bin", ios::in | ios::binary);                                 //read
+      f2.open("new.bin", ios::app | ios::binary);                                  //write
+      while (f1.read(reinterpret_cast < char * > ( & rec), sizeof(rec))) {
+         if (rec.account != a)
+            f2.write(reinterpret_cast < char * > ( & rec), sizeof(rec));
+         else if (rec.account == a) {                                              //if account found
+
+            cout << "Account Number Matched";
+
+            cout << "Enter Your Details";
+
+            cout << "[1] . Enter Your Name           : ";
+            cin >> rec.name;
+
+            cout << "[2] . Enter Your Account Number : ";
+            cin >> rec.account;
+
+            cout << "[3] . Enter Your Phone Number   : ";
+            cin >> rec.phone;
+
+            cout << "[4] . Enter Your Address        : ";
+            cin >> rec.address;
+
+            cout << "[5] . Enter Your E-mail         : ";
+            cin >> rec.email;
+
+            cout << "[6] . Enter Your Citizenship No : ";
+            cin >> rec.citizenship_no;
+            f2.write(reinterpret_cast < char * > ( & rec), sizeof(rec));
+         }
+      }
+      f1.close();                                                              //To close file
+      f2.close();
+   }
+   if (ca(a) == 0)                                                             //If account doesnot found
+   {
+      system("CLS");
+
+      cout << "Account Doesn't Exist. ";
+cout<<endl;
+    edit();
+   }
+   remove("record.bin");
+   rename("new.bin", "record.bin");
+
+   cout << "CUSTOMER ACCOUNT UPDATE SUCCESSFULL";
+
+   cout << "Press any key to return back to main menu . ";
+   getch();
+   main();
+}
